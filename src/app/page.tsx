@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { getWeatherData, getRadarFrames } from '@/lib/api';
+import { getRadarFrames } from '@/lib/api';
 import WeatherApp from '@/components/WeatherApp';
 import LoadingWeather from '@/components/LoadingWeather';
 
