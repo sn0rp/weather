@@ -2,16 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .vignette-left {
+    mask-image: linear-gradient(to right, transparent, black 70px);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 70px);
+  }
+  
+  .vignette-right {
+    mask-image: linear-gradient(to left, transparent, black 70px);
+    -webkit-mask-image: linear-gradient(to left, transparent, black 70px);
+  }
+  
+  .vignette-both {
+    mask-image: linear-gradient(to right, transparent, black 70px, black calc(100% - 70px), transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 70px, black calc(100% - 70px), transparent);
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --border: #d1d5db;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --border: #3f3f3f;
+}
+
+html.light {
+  --background: #ffffff;
+  --foreground: #171717;
+  --border: #a2a5aa;
 }
 
 body {

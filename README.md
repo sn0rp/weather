@@ -1,36 +1,125 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Weather
 
-## Getting Started
+A comprehensive weather Progressive Web App built with Next.js 14, TypeScript, and Tailwind CSS. The app provides real-time weather data, forecasts, and radar imagery using free, reliable APIs.
 
-First, run the development server:
+## Features
+
+- 📱 Progressive Web App with offline support
+- 🌍 Automatic geolocation detection
+- 🔍 Location search with OpenStreetMap's Nominatim API
+- ⛅ Real-time weather data from OpenMeteo
+- 📊 Hourly and daily forecasts
+- 🌡️ Comprehensive weather metrics (temperature, precipitation, wind, UV, AQI, etc.)
+- 🌅 Sun and moon times
+- 🗺️ Interactive weather radar using RainViewer API
+- 💨 Smooth carousel navigation
+- 📱 Responsive design
+- ⚡ Server-side rendering for optimal performance
+
+## Prerequisites
+
+- Node.js 18.17 or later
+- pnpm (recommended) or npm
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/weather-pwa.git
+   cd weather-pwa
+   ```
+
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+
+3. Create required directories and files:
+   ```bash
+   mkdir -p public/icons
+   ```
+
+4. Add PWA icons to the `public/icons` directory:
+   - `icon-192x192.png` (192x192 pixels)
+   - `icon-512x512.png` (512x512 pixels)
+   - `apple-touch-icon.png` (180x180 pixels)
+
+## Development
+
+Run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Building for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Build the application:
+   ```bash
+   pnpm build
+   ```
 
-## Learn More
+2. Start the production server:
+   ```bash
+   pnpm start
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+## API Integration
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The app uses the following free APIs:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- OpenMeteo Weather API (https://api.open-meteo.com/v1/forecast)
+- OpenMeteo Air Quality API (https://air-quality-api.open-meteo.com/v1/air-quality)
+- RainViewer API (https://www.rainviewer.com/api.html)
+- Nominatim API (https://nominatim.org/release-docs/latest/api/Overview/)
 
-## Deploy on Vercel
+No API keys are required for these services.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## PWA Features
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Offline support with service worker
+- Add to home screen capability
+- Background updates
+- Push notifications for severe weather (configurable)
+- Responsive design for all devices
+
+## Project Structure
+
+```
+weather-pwa/
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   └── globals.css
+│   ├── components/
+│   │   ├── WeatherApp.tsx
+│   │   └── LoadingWeather.tsx
+│   ├── lib/
+│   │   └── api.ts
+│   └── types/
+│       └── weather.ts
+├── public/
+│   ├── icons/
+│   │   ├── icon-192x192.png
+│   │   ├── icon-512x512.png
+│   │   └── apple-touch-icon.png
+│   ├── manifest.json
+│   ├── sw.js
+│   └── offline.html
+└── package.json
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
