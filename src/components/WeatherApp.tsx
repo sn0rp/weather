@@ -38,36 +38,15 @@ export default function WeatherApp({ initialRadarFrames }: WeatherAppProps) {
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState<Location[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [locationError, setLocationError] = useState<string | null>(null);
-  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(() => {
-    if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('weather-theme');
-      if (savedTheme) {
-        return savedTheme as 'light' | 'dark' | 'system';
-      }
-    }
-    return 'system';
-  });
+  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system');
   const [units, setUnits] = useState<{
     temperature: 'C' | 'F';
     time: '12' | '24';
     pressure: 'mb' | 'inHg';
-  }>(() => {
-    if (typeof window !== 'undefined') {
-      const savedUnits = localStorage.getItem('weather-units');
-      if (savedUnits) {
-        return JSON.parse(savedUnits);
-      }
-    }
-    
-    // Default to US units if we're in the US, metric otherwise
-    const userLocale = navigator.language;
-    const isUS = userLocale === 'en-US';
-    return {
-      temperature: isUS ? 'F' : 'C',
-      time: isUS ? '12' : '24',
-      pressure: isUS ? 'inHg' : 'mb'
-    };
+  }>({
+    temperature: 'C',
+    time: '24',
+    pressure: 'mb'
   });
 
   const debouncedLocation = useDebounce(location, 300);
@@ -78,7 +57,7 @@ export default function WeatherApp({ initialRadarFrames }: WeatherAppProps) {
       try {
         if (navigator.geolocation) {
           const position = await new Promise<GeolocationPosition>((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, (error) => {
+            navigator.geolocation.getCurrentPosition(resolve, () => {
               // Silently handle the error and reject
               reject(new Error('Location access unavailable'));
             }, {
@@ -97,7 +76,7 @@ export default function WeatherApp({ initialRadarFrames }: WeatherAppProps) {
           // Silently fall back to Austin
           throw new Error('Geolocation not supported');
         }
-      } catch (error) {
+      } catch {
         // Default to Austin without showing error messages
         const data = await getWeatherData(30.2672, -97.7431);
         setWeatherData(data);
@@ -146,8 +125,22 @@ export default function WeatherApp({ initialRadarFrames }: WeatherAppProps) {
   }, [theme]);
 
   useEffect(() => {
-    localStorage.setItem('weather-units', JSON.stringify(units));
-  }, [units]);
+    // Load saved units from localStorage
+    const savedUnits = localStorage.getItem('weather-units');
+    if (savedUnits) {
+      setUnits(JSON.parse(savedUnits));
+      return;
+    }
+
+    // Default to US units if we're in the US, metric otherwise
+    const userLocale = navigator.language;
+    const isUS = userLocale === 'en-US';
+    setUnits({
+      temperature: isUS ? 'F' : 'C',
+      time: isUS ? '12' : '24',
+      pressure: isUS ? 'inHg' : 'mb'
+    });
+  }, []);
 
   useEffect(() => {
     const checkAndReload = () => {
@@ -398,18 +391,19 @@ export default function WeatherApp({ initialRadarFrames }: WeatherAppProps) {
     });
   };
 
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('weather-theme');
+    if (savedTheme) {
+      setTheme(savedTheme as 'light' | 'dark' | 'system');
+    }
+  }, []);
+
   if (isLoading || !weatherData) {
     return <LoadingWeather />;
   }
 
   return (
     <div className="max-w-3xl mx-auto p-4 space-y-4 text-foreground bg-background">
-      {locationError && (
-        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900 text-yellow-800 dark:text-yellow-200 px-4 py-2 rounded-md text-sm mb-4">
-          {locationError}
-        </div>
-      )}
-      
       <div className="flex justify-between items-center">
         <div className="relative flex-1">
           <div className="relative">
