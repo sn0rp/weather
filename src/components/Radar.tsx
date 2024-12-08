@@ -90,6 +90,7 @@ const Radar = React.memo(({ radarFrames, getRadarUrl, formatRadarTime }: RadarPr
                         frameIndex === currentFrame ? 'opacity-70' : 'opacity-0'
                       }`}
                       unoptimized
+                      priority={frameIndex === currentFrame}
                       crossOrigin="anonymous"
                     />
                   ))}

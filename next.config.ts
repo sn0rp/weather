@@ -3,13 +3,24 @@ import withPWA from 'next-pwa';
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ['tile.openstreetmap.org', 'tilecache.rainviewer.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'tile.openstreetmap.org',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'tilecache.rainviewer.com',
+        pathname: '/**',
+      }
+    ],
     formats: ['image/avif', 'image/webp'],
+    unoptimized: true
   },
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb',
-      allowedOrigins: ['localhost:3000'],
     },
   },
 };
