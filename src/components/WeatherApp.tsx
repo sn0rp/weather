@@ -8,9 +8,9 @@ import Settings from './Settings';
 import { convertTemperature, convertPressure, formatTime } from '@/lib/utils';
 import Radar from './Radar';
 import Image from 'next/image';
+import LoadingWeather from '@/components/LoadingWeather';
 
 interface WeatherAppProps {
-  initialWeatherData: WeatherData;
   initialRadarFrames: RadarFrame[];
 }
 
@@ -30,10 +30,10 @@ const useDebounce = <T,>(value: T, delay: number): T => {
   return debouncedValue;
 };
 
-export default function WeatherApp({ initialWeatherData, initialRadarFrames }: WeatherAppProps) {
-  const [weatherData, setWeatherData] = useState(initialWeatherData);
+export default function WeatherApp({ initialRadarFrames }: WeatherAppProps) {
+  const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [radarFrames] = useState(initialRadarFrames);
-  const [location, setLocation] = useState(initialWeatherData.location.name);
+  const [location, setLocation] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [searchResults, setSearchResults] = useState<Location[]>([]);
@@ -58,7 +58,7 @@ export default function WeatherApp({ initialWeatherData, initialRadarFrames }: W
       }
     }
     
-    const isUS = initialWeatherData.location?.country === 'United States';
+    const isUS = weatherData?.location?.country === 'United States';
     return {
       temperature: isUS ? 'F' : 'C',
       time: isUS ? '12' : '24',
@@ -71,11 +71,26 @@ export default function WeatherApp({ initialWeatherData, initialRadarFrames }: W
 
   useEffect(() => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(async (position) => {
-        const data = await getWeatherData(
-          position.coords.latitude,
-          position.coords.longitude
-        );
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const data = await getWeatherData(
+            position.coords.latitude,
+            position.coords.longitude
+          );
+          setWeatherData(data);
+          setLocation(data.location.name);
+        },
+        async (error) => {
+          // Fallback to Austin if geolocation fails
+          console.error('Geolocation error:', error);
+          const data = await getWeatherData(30.2672, -97.7431);
+          setWeatherData(data);
+          setLocation(data.location.name);
+        }
+      );
+    } else {
+      // Fallback for browsers without geolocation
+      getWeatherData(30.2672, -97.7431).then(data => {
         setWeatherData(data);
         setLocation(data.location.name);
       });
@@ -143,7 +158,7 @@ export default function WeatherApp({ initialWeatherData, initialRadarFrames }: W
     let isCurrentSearch = true;
 
     const performSearch = async () => {
-      if (debouncedQuery.length > 2 && debouncedQuery !== weatherData.location.name) {
+      if (debouncedQuery.length > 2 && debouncedQuery !== weatherData?.location.name) {
         setIsSearching(true);
         try {
           const results = await searchLocation(debouncedQuery);
@@ -170,7 +185,7 @@ export default function WeatherApp({ initialWeatherData, initialRadarFrames }: W
     return () => {
       isCurrentSearch = false;
     };
-  }, [debouncedQuery, weatherData.location.name]);
+  }, [debouncedQuery, weatherData?.location.name]);
 
   const handleSearchInput = (value: string) => {
     setSearchQuery(value);
@@ -321,8 +336,9 @@ export default function WeatherApp({ initialWeatherData, initialRadarFrames }: W
   }, []);
 
   const getRadarUrl = (path?: string) => {
-    const lat = weatherData.location.latitude;
-    const lon = weatherData.location.longitude;
+    // Default to Austin coordinates if weather data is not available
+    const lat = weatherData?.location.latitude ?? 30.2672;
+    const lon = weatherData?.location.longitude ?? -97.7431;
     const zoom = 9;
     
     // Convert lat/lon to tile coordinates
@@ -368,6 +384,10 @@ export default function WeatherApp({ initialWeatherData, initialRadarFrames }: W
       hour12: units.time === '12'
     });
   };
+
+  if (!weatherData) {
+    return <LoadingWeather />;
+  }
 
   return (
     <div className="max-w-3xl mx-auto p-4 space-y-4 text-foreground bg-background">
