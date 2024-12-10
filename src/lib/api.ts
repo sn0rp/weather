@@ -160,8 +160,16 @@ export async function getWeatherData(lat: number, lon: number): Promise<WeatherD
       .slice(dayStart, dayEnd)
       .reduce((sum: number, val: number) => sum + val, 0) / 24;
 
+    // Add one day to the date to align with the data
+    const date = new Date(time);
+    date.setDate(date.getDate() + 1);
+
     return {
-      date: new Date(time).toLocaleDateString(),
+      date: date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric'
+      }),
       high: Math.round(weather.daily.temperature_2m_max[i]),
       low: Math.round(weather.daily.temperature_2m_min[i]),
       condition: getWeatherEmoji(
