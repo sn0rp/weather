@@ -32,7 +32,7 @@ const useDebounce = <T,>(value: T, delay: number): T => {
 
 export default function WeatherApp({ initialRadarFrames }: WeatherAppProps) {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
-  const [radarFrames] = useState(initialRadarFrames);
+  const [radarFrames, setRadarFrames] = useState(initialRadarFrames);
   const [location, setLocation] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
@@ -396,6 +396,26 @@ export default function WeatherApp({ initialRadarFrames }: WeatherAppProps) {
     if (savedTheme) {
       setTheme(savedTheme as 'light' | 'dark' | 'system');
     }
+  }, []);
+
+  useEffect(() => {
+    const updateRadarFrames = async () => {
+      try {
+        const response = await fetch('/api/radar');
+        const newFrames = await response.json();
+        setRadarFrames(newFrames);
+      } catch (error) {
+        console.error('Failed to update radar frames:', error);
+      }
+    };
+
+    // Update immediately on mount
+    updateRadarFrames();
+
+    // Then update every 5 minutes
+    const interval = setInterval(updateRadarFrames, 5 * 60 * 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   if (isLoading || !weatherData) {
