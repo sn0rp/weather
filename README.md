@@ -25,8 +25,8 @@ A comprehensive weather Progressive Web App built with Next.js 14, TypeScript, a
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/weather-pwa.git
-   cd weather-pwa
+   git clone https://github.com/sn0rp/weather
+   cd weather
    ```
 
 2. Install dependencies:
