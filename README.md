@@ -1,60 +1,31 @@
 # Weather
 
-A comprehensive weather Progressive Web App built with Next.js 14, TypeScript, and Tailwind CSS. The app provides real-time weather data, forecasts, and radar imagery using free, reliable APIs.
+A comprehensive weather PWA built with Next.js, TypeScript, and Tailwind. The app provides real-time weather data, forecasts, and radar imagery using free, reliable APIs.
 
 ## Features
 
-- 📱 Progressive Web App with offline support
-- 🌍 Automatic geolocation detection
-- 🔍 Location search with OpenStreetMap's Nominatim API
-- ⛅ Real-time weather data from OpenMeteo
-- 📊 Hourly and daily forecasts
-- 🌡️ Comprehensive weather metrics (temperature, precipitation, wind, UV, AQI, etc.)
-- 🌅 Sun and moon times
-- 🗺️ Interactive weather radar using RainViewer API
-- 💨 Smooth carousel navigation
-- 📱 Responsive design
-- ⚡ Server-side rendering for optimal performance
+- Progressive Web App with offline support
+- Automatic geolocation detection
+- Location search with OpenStreetMap's Nominatim API
+- Real-time weather data from OpenMeteo
+- Hourly and daily forecasts
+- Comprehensive weather metrics (temperature, precipitation, wind, UV, AQI, etc.)
+- Sun and moon times
+- Interactive weather radar using RainViewer API
+- Smooth carousel navigation
+- Responsive design
+- Server-side rendering for optimal performance
 
-## Prerequisites
-
-- Node.js 18.17 or later
-- pnpm (recommended) or npm
-
-## Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/sn0rp/weather
-   cd weather
-   ```
-
-2. Install dependencies:
-   ```bash
-   pnpm install
-   ```
-
-## Development
-
-Run the development server:
+## Installation & Operation
 
 ```bash
-pnpm dev
+git clone https://github.com/sn0rp/weather
+cd weather
+pnpm install
+pnpm dev       # pnpm build, pnpm start for production
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## Building for Production
-
-1. Build the application:
-   ```bash
-   pnpm build
-   ```
-
-2. Start the production server:
-   ```bash
-   pnpm start
-   ```
 
 ## API Integration
 
